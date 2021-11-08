@@ -116,7 +116,7 @@ class CountryCodePicker extends StatefulWidget {
     this.showDropDownButton = false,
     this.dialogSize,
     this.dialogBackgroundColor,
-    this.closeIcon = const Icon(Icons.close),
+    this.closeIcon = const Icon(Icons.close, size: 20,),
     this.countryList = codes,
     Key? key,
   }) : super(key: key);
