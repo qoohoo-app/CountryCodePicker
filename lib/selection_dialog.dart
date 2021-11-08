@@ -28,26 +28,26 @@ class SelectionDialog extends StatefulWidget {
   final List<CountryCode> favoriteElements;
 
   SelectionDialog(
-    this.elements,
-    this.favoriteElements, {
-    Key? key,
-    this.showCountryOnly,
-    this.emptySearchBuilder,
-    InputDecoration searchDecoration = const InputDecoration(),
-    this.searchStyle,
-    this.textStyle,
-    this.boxDecoration,
-    this.showFlag,
-    this.flagDecoration,
-    this.flagWidth = 32,
-    this.size,
-    this.backgroundColor,
-    this.barrierColor,
-    this.hideSearch = false,
-    this.closeIcon,
-  })  : this.searchDecoration = searchDecoration.prefixIcon == null
-            ? searchDecoration.copyWith(prefixIcon: Icon(Icons.search))
-            : searchDecoration,
+      this.elements,
+      this.favoriteElements, {
+        Key? key,
+        this.showCountryOnly,
+        this.emptySearchBuilder,
+        InputDecoration searchDecoration = const InputDecoration(),
+        this.searchStyle,
+        this.textStyle,
+        this.boxDecoration,
+        this.showFlag,
+        this.flagDecoration,
+        this.flagWidth = 32,
+        this.size,
+        this.backgroundColor,
+        this.barrierColor,
+        this.hideSearch = false,
+        this.closeIcon,
+      })  : this.searchDecoration = searchDecoration.prefixIcon == null
+      ? searchDecoration.copyWith(prefixIcon: Icon(Icons.search))
+      : searchDecoration,
         super(key: key);
 
   @override
@@ -60,81 +60,90 @@ class _SelectionDialogState extends State<SelectionDialog> {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          width: widget.size?.width ?? MediaQuery.of(context).size.width,
-          height:
-              widget.size?.height ?? MediaQuery.of(context).size.height * 0.85,
-          decoration: widget.boxDecoration ??
-              BoxDecoration(
-                color: widget.backgroundColor ?? Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: widget.barrierColor ?? Colors.grey.withOpacity(1),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              IconButton(
-                padding: const EdgeInsets.all(0),
-                iconSize: 20,
-                icon: widget.closeIcon!,
-                onPressed: () => Navigator.pop(context),
-              ),
-              if (!widget.hideSearch)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: TextField(
-                    style: widget.searchStyle,
-                    decoration: widget.searchDecoration,
-                    onChanged: _filterElements,
-                  ),
-                ),
-              Expanded(
-                child: ListView(
-                  children: [
-                    widget.favoriteElements.isEmpty
-                        ? const DecoratedBox(decoration: BoxDecoration())
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...widget.favoriteElements.map(
-                                (f) => SimpleDialogOption(
-                                  child: _buildOption(f),
-                                  onPressed: () {
-                                    _selectItem(f);
-                                  },
-                                ),
-                              ),
-                              const Divider(),
-                            ],
-                          ),
-                    if (filteredElements.isEmpty)
-                      _buildEmptySearchWidget(context)
-                    else
-                      ...filteredElements.map(
-                        (e) => SimpleDialogOption(
-                          child: _buildOption(e),
-                          onPressed: () {
-                            _selectItem(e);
-                          },
-                        ),
-                      ),
-                  ],
-                ),
+    padding: const EdgeInsets.all(0.0),
+    child: Container(
+      clipBehavior: Clip.hardEdge,
+      width: widget.size?.width ?? MediaQuery.of(context).size.width,
+      height: widget.size?.height ?? MediaQuery.of(context).size.height * 0.85,
+      decoration: widget.boxDecoration ??
+          BoxDecoration(
+            color: widget.backgroundColor ?? Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            boxShadow: [
+              BoxShadow(
+                color: widget.barrierColor ?? Colors.grey.withOpacity(1),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          IconButton(
+            padding: const EdgeInsets.all(0),
+            iconSize: 20,
+            icon: widget.closeIcon!,
+            onPressed: () => Navigator.pop(context),
+          ),
+          if (!widget.hideSearch)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: TextField(
+                style: widget.searchStyle,
+                decoration: widget.searchDecoration,
+                onChanged: _filterElements,
+              ),
+            ),
+          Expanded(
+            child: ListView(
+              children: [
+                widget.favoriteElements.isEmpty
+                    ? const DecoratedBox(decoration: BoxDecoration())
+                    : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...widget.favoriteElements.map(
+                          (f) => _buildSimpleDialogOptionWithDivider(f, true),
+                    ),
+                    const Divider(),
+                  ],
+                ),
+                if (filteredElements.isEmpty)
+                  _buildEmptySearchWidget(context)
+                else
+                  ...filteredElements.map(
+                        (e) => _buildSimpleDialogOptionWithDivider(e, (e != filteredElements.last)),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildSimpleDialogOptionWithDivider(CountryCode e, bool showDivider){
+    return Column(
+      children: [
+        SimpleDialogOption(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.0, vertical: 12.0,
+          ),
+          child: _buildOption(e),
+          onPressed: () {
+            _selectItem(e);
+          },
         ),
-      );
+        if(showDivider)Container(
+          height: 1.0,
+          color: Colors.white.withOpacity(0.04),
+        ),
+      ],
+    );
+  }
 
   Widget _buildOption(CountryCode e) {
     return Container(
@@ -147,8 +156,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
               child: Container(
                 margin: const EdgeInsets.only(right: 16.0),
                 decoration: widget.flagDecoration,
-                clipBehavior:
-                    widget.flagDecoration == null ? Clip.none : Clip.hardEdge,
+                clipBehavior: widget.flagDecoration == null ? Clip.none : Clip.hardEdge,
                 child: Image.asset(
                   e.flagUri!,
                   package: 'country_code_picker',
@@ -156,14 +164,32 @@ class _SelectionDialogState extends State<SelectionDialog> {
                 ),
               ),
             ),
-          Expanded(
+          (widget.showCountryOnly!)
+              ? Expanded(
             flex: 4,
             child: Text(
-              widget.showCountryOnly!
-                  ? e.toCountryStringOnly()
-                  : e.toLongString(),
+              e.toCountryStringOnly(),
               overflow: TextOverflow.fade,
               style: widget.textStyle,
+            ),
+          )
+              : Expanded(
+            flex: 7,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    e.toCountryStringOnly(),
+                    overflow: TextOverflow.fade,
+                    style: widget.textStyle,
+                  ),
+                ),
+                Text(
+                  e.dialCode!,
+                  overflow: TextOverflow.fade,
+                  style: widget.textStyle,
+                ),
+              ],
             ),
           ),
         ],
@@ -177,8 +203,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
     }
 
     return Center(
-      child: Text(CountryLocalizations.of(context)?.translate('no_country') ??
-          'No country found'),
+      child: Text(CountryLocalizations.of(context)?.translate('no_country') ?? 'No country found'),
     );
   }
 
@@ -192,10 +217,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
     s = s.toUpperCase();
     setState(() {
       filteredElements = widget.elements
-          .where((e) =>
-              e.code!.contains(s) ||
-              e.dialCode!.contains(s) ||
-              e.name!.toUpperCase().contains(s))
+          .where((e) => e.code!.contains(s) || e.dialCode!.contains(s) || e.name!.toUpperCase().contains(s))
           .toList();
     });
   }
@@ -204,3 +226,4 @@ class _SelectionDialogState extends State<SelectionDialog> {
     Navigator.pop(context, e);
   }
 }
+
