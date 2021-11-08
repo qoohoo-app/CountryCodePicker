@@ -100,16 +100,26 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CountryCodePicker(
-                onChanged: print,
-                // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-                initialSelection: 'IT',
-                favorite: ['+39', 'FR'],
-                countryFilter: ['IT', 'FR'],
-                showFlagDialog: false,
-                comparator: (a, b) => b.name.compareTo(a.name),
-                //Get the country information relevant to the initial selection
-                onInit: (code) =>
-                    print("on init ${code.name} ${code.dialCode} ${code.name}"),
+                initialSelection: '+91',
+                showFlag: true,
+                padding: EdgeInsets.all(0.0),
+                textOverflow: TextOverflow.clip,
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20.0,
+                  height: 28.0/20.0,
+                  color: Colors.white,
+                ),
+                dialogTextStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.0,
+                  height: 21.0/14.0,
+                  color: Colors.white,
+                ),
+                //onChanged: viewController.onCountryCodeChanged,
+                backgroundColor: Color(0xff181b1e),
+                dialogBackgroundColor: Color(0xff181b1e),
+                barrierColor: Color(0xff181b1e),
               ),
               CountryCodePicker(
                 onChanged: print,
