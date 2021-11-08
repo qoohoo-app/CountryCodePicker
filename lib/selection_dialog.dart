@@ -90,6 +90,9 @@ class _SelectionDialogState extends State<SelectionDialog> {
                 icon: widget.closeIcon!,
                 onPressed: () => Navigator.pop(context),
               ),
+              SizedBox(
+                height: 10.0,
+              ),
               if (!widget.hideSearch)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
